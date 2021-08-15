@@ -1,22 +1,32 @@
-// Dependencies
-const express = require("express");
+const express = require('express');
+const path = require('path');
+const { clog } = require('./middleware/clog');
+const indexRouter = require('./routes/index.js');
 
-// Express configuration
-//Tells node that we are creating an 'express' server
+const PORT = process.env.PORT || 3001;
+
 const app = express();
 
-// Sets an initial port.
-const PORT = process.env.PORT || 3000;
+// Import custom middleware, "cLog"
+app.use(clog);
 
-// Sets up the Express app to handle data parsing
-app.use(express.urlencoded({ extended: true }));
+// Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
+app.use('/api', indexRouter);
 
-// ROUTES
-require('./routes/apiRoutes')(app);
-require('./routes/htmlRoutes')(app);
+app.use(express.static('./public'));
 
-app.listen(PORT, function() {
-    console.log(`App listening on PORT: ${PORT}`);
-});
+// GET Route for homepage
+app.get('/', (req, res) =>
+  res.sendFile(path.join(__dirname, './public/index.html'))
+);
+
+// GET Route for notes
+app.get('/notes', (req, res) =>
+  res.sendFile(path.join(__dirname, './public/notes.html'))
+);
+
+app.listen(PORT, () =>
+  console.log(`App listening at http://localhost:${PORT} 🚀`)
+);
