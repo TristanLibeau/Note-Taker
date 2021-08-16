@@ -11,6 +11,8 @@ This application is a simple tool to take notes. T o install it simply git clone
 * npm i express
 * npm start
 
+Then on your browser type http://localhost:3001/ to acces the app.
+
 ## Links
 
 * URL of my Repository:
